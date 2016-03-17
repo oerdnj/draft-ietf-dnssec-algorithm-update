@@ -25,7 +25,7 @@
 <?rfc sortrefs="no" ?>
 <?rfc rfcedstyle="yes"?>
 
-<rfc ipr="trust200902" docName="draft-ietf-dnssec-algorithm-update-00" category="std">
+<rfc ipr="trust200902" docName="draft-wouters-sury-dnsop-algorithm-update-00" category="std">
   <front>
     <title abbrev="DNSSEC Cryptographic Algorithms">Algorithm Implementation Requirements and Usage Guidance for DNSSEC</title>
     <author fullname="Paul Wouters" initials="P." surname="Wouters">
