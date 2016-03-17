@@ -8,8 +8,10 @@
 <!ENTITY RFC5702 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5702.xml">
 <!ENTITY RFC5933 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5933.xml">
 <!ENTITY RFC6605 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6605.xml">
+<!ENTITY RFC7344 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7344.xml">
 <!ENTITY ED25519 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-curdle-dnskey-ed25519.xml">
 <!ENTITY ED448 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-curdle-dnskey-ed448.xml">
+<!ENTITY MAINTAINDS PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dnsop-maintain-ds.xml">
 ]>
 
 <?rfc toc="yes"?>
@@ -64,7 +66,7 @@
 	<xref target="RFC5702"/>, <xref target="RFC5933"/>, <xref
 	target="RFC6605"/>, <xref
 	target="I-D.ietf-curdle-dnskey-ed25519"/> and <xref
-	target="I-D.ietf-curdle-dnskey-ed448"/> [RFC], [RFC] and is
+	target="I-D.ietf-curdle-dnskey-ed448"/>. DNSSEC is
 	used to provide authentication of data.  To ensure
 	interoperability, a set of "mandatory-to-implement" DNSKEY
 	algorithms are defined.
@@ -94,7 +96,7 @@
 	  cryptographic attack and may become too weak or could become
 	  completely broken before this document is updated.
 	</t>
-	
+
 	<t>
 	  This document only provides recommendations for the
 	  mandatory-to-implement algorithms or algorithms too weak that
@@ -104,7 +106,7 @@
 	  clarification and consistency, an algorithm will be set to
 	  MAY only when it has been downgraded.
 	</t>
-	
+
 	<t>
 	  Although this document updates the algorithms to keep the
 	  DNSSEC authentication secure over time, it also aims at
@@ -139,7 +141,7 @@
 	<t>
 	  Recursive nameservers are encouraged to keep support for all
 	  algorithms not marked as MUST NOT.
-	</t>	
+	</t>
       </section>
 
       <section title="Document Audience">
@@ -180,14 +182,14 @@
 	  that an algorithm marked as SHOULD+ will be promoted at some
 	  future time to be a MUST.
 	</c>
-	
+
 	<c>SHOULD-</c>
 	<c>
 	  This term means the same as SHOULD.  However, an algorithm
 	  marked as SHOULD- may be deprecated to a MAY in a future
 	  version of this document.
 	</c>
-	
+
 	<c>MUST-</c>
 	<c>
 	  This term means the same as MUST.  However, we expect at some
@@ -202,19 +204,19 @@
     </section>
 
     <section anchor="algs" title="Algorithm Selection">
-      
+
       <section anchor="algs_dnskey" title="DNSKEY Algorithms">
 
 	<t>
 	  Recommendations for DNSKEY algorithms
 	</t>
 
-	<texttable anchor="tbl_enc" suppress-title="true">
+	<texttable anchor="tbl_dnskey" suppress-title="true">
           <ttcol align="left">Number</ttcol>
           <ttcol align="left">Mnemonics</ttcol>
           <ttcol align="left">DNSSEC Signing</ttcol>
           <ttcol align="left">DNSSEC Validation</ttcol>
-	  
+
           <c>1</c><c>RSAMD5</c><c>MUST NOT</c><c>MUST NOT</c>
           <c>3</c><c>DSA</c><c>MUST NOT</c><c>MUST NOT</c>
           <c>5</c><c>RSASHA1</c><c>MUST-</c><c>MUST-</c>
@@ -228,7 +230,7 @@
 	  <c>TBD</c><c>ED25519</c><c>SHOULD+</c><c>SHOULD+</c>
 	  <c>TBD</c><c>ED448</c><c>SHOULD</c><c>SHOULD+</c>
 	</texttable>
-	
+
 	<t>
 	  RSAMD5 is not widely deployed and there is an industry-wide
 	  trend to deprecate MD5 usage.
@@ -247,7 +249,7 @@
 	  vulnerable to private key compromise when generating
 	  signatures using a weak or compromised random number
 	  generator.
-	</t>	  
+	</t>
 
         <t>
 	  RSASHA512 is at the SHOULD level for DNSSEC Signing because
@@ -283,6 +285,54 @@
 
       </section>
 
+      <section anchor="algs_ds" title="DS and CDS Algorithms">
+
+	<t>
+	  Recommendations for Delegation Signer Digest Algorithms. These also
+          apply to the CDS RRTYPE as specified in <xref target="RFC7344"/>
+	</t>
+
+	<texttable anchor="tbl_ds" suppress-title="true">
+          <ttcol align="left">Number</ttcol>
+          <ttcol align="left">Mnemonics</ttcol>
+          <ttcol align="left">DNSSEC Delegation</ttcol>
+          <ttcol align="left">DNSSEC Validation</ttcol>
+
+          <c>0</c><c>NULL (CDS only)</c><c>MUST NOT [*]</c><c>MUST NOT [*]</c>
+          <c>1</c><c>SHA-1</c><c>SHOULD NOT</c><c>MUST-</c>
+          <c>2</c><c>SHA-256</c><c>MUST</c><c>MUST</c>
+          <c>3</c><c>GOST R 34.11-94</c><c>MAY</c><c>SHOULD</c>
+          <c>4</c><c>SHA-384</c><c>MAY</c><c>SHOULD+</c>
+         <postamble>
+          [*] - This is a special type of CDS record signaling removal of
+	  DS at the parent in <xref target="I-D.ietf-dnsop-maintain-ds"/>
+         </postamble>
+	</texttable>
+
+	<t>
+	  NULL is a special case, see <xref target="I-D.ietf-dnsop-maintain-ds"/>
+	</t>
+
+	<t>
+	  SHA-1 is in wide use for DS records, but its use is discouraged
+	  as it is an aging algorithm. Users of SHA-1 SHOULD upgrade to SHA-256.
+	</t>
+
+        <t>
+	  SHA-256 is in wide use and considered strong.
+	</t>
+
+        <t>
+	  GOST R 34.11-94 is not in wide use. It is still recommended
+	  to be supported in validators so that adoption can increase.
+	</t>
+
+	<t>
+	  SHA-384 is not in wide use. It is still recommended to be
+	  supported in validators so that adoption can increase.
+	</t>
+
+      </section>
     </section>
 
     <section anchor="security" title="Security Considerations">
@@ -318,7 +368,7 @@
 	measurements of its use.
       </t>
     </section>
-    
+
     <section anchor="operation" title="Operational Considerations">
       <t>
 	DNSKEY algorithm rollover in a live zone is a complex
@@ -326,7 +376,7 @@
 	algorithm rollovers.
       </t>
     </section>
-    
+
     <section anchor="iana" title="IANA Considerations">
       <t>This document makes no requests of IANA.</t>
     </section>
@@ -356,11 +406,22 @@
       &RFC5702;
       &RFC5933;
       &RFC6605;
+      &RFC7344;
       &ED25519;
-      &ED448;      
+      &ED448;
+      &MAINTAINDS;
       <reference anchor="DNSKEY-IANA" target="http://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xhtml">
         <front>
           <title>DNSKEY Algorithms</title>
+          <author initials="" surname="" fullname="">
+            <organization />
+          </author>
+          <date />
+        </front>
+      </reference>
+      <reference anchor="DS-IANA" target="http://www.iana.org/assignments/ds-rr-types/ds-rr-types.xhtml">
+        <front>
+          <title>Delegation Signer Digest Algorithms</title>
           <author initials="" surname="" fullname="">
             <organization />
           </author>
