@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!ENTITY rfc2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY rfc6989 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6989.xml">
+<!ENTITY rfc7427 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7427.xml">
+<!ENTITY rfc5282 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5282.xml">
+]>
+
+<?rfc toc="yes"?>
+<?rfc strict="yes" ?>
+<?rfc linkmailto="yes" ?>
+<?rfc symrefs="yes"?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<?rfc sortrefs="no" ?>
+<?rfc rfcedstyle="yes"?>
+
+<rfc ipr="trust200902" docName="draft-ietf-dnssec-algorithm-update-00" category="std">
+  <front>
+    <title abbrev="IKEv2 Cryptographic Algorithms">Algorithm Implementation Requirements and Usage Guidance for DNSSEC</title>
+    <author fullname="Paul Wouters" initials="P." surname="Wouters">
+      <organization>Red Hat</organization>
+      <address>
+        <email>pwouters@redhat.com</email>
+      </address>
+    </author>
+    <author fullname="Ondrey Sury" initials="O." surname="Sury">
+      <organization> NIC CZ </organization>
+      <address>
+        <email>ondrej.sury@nic.cz</email>
+      </address>
+    </author>
+    <date year="2016"/>
+    <area>Security</area>
+    <!-- <workgroup>dnsop Working Group</workgroup> -->
+    <keyword>Internet-Draft</keyword>
+    <abstract>
+      <t> The DNSSEC protocol makes use of various cryptographic
+      algorithms in order to provide authentication of DNS data and
+      proof of non-existence. To ensure interoperability between DNS
+      resolvers and DNS authoritative servers, it is necessary to
+      specify a set of algorithm implementation requirements and usage
+      guidance to ensure that there is at least one algorithm that all
+      implementations support. This document defines the current algorithm
+      implementation requirements and usage guidance for DNSSEC.</t>
+    </abstract>
+  </front>
+  <middle>
+    <!-- ====================================================================== -->
+    <section anchor="introduction" title="Introduction">
+
+
+      <t> The DNSSEC signing algorithms are defined by various RFCs, including [RFC],
+      [RFC], [RFC] and is used to provide authentication of data. To ensure
+      interoperability, a set of "mandatory-to-implement" DNSKEY algorithms are defined.</t>
+
+     <section title="Updating Algorithm Implementation Requirements and Usage Guidance">
+      <t> The field of cryptography evolves continuously. New stronger
+      algorithms appear and existing algorithms are found to be less
+      secure then originally thought. Therefore, algorithm implementation
+      requirements and usage guidance need to be updated from time to
+      time to reflect the new reality. The choices for algorithms must
+      be conservative to minimize the risk of algorithm compromise. </t>
+     </section>
+
+     <section title="Updating Algorithm Requirement Levels">
+      <t> The mandatory-to-implement algorithm of tomorrow should already
+      be available in most implementations of DNSSEC by the time it is
+      made mandatory. This document attempts to identify and introduce
+      those algorithms for future mandatory-to-implement status. There is
+      no guarantee that the algorithms in use today may become mandatory
+      in the future. Published algorithms are continuously subjected
+      to cryptographic attack and may become too weak or could become
+      completely broken before this document is updated.</t>
+
+      <t> This document only provides recommendations for the
+      mandatory-to-implement algorithms or algorithms too weak that are
+      recommended not to be implemented. As a result, any algorithm listed
+      at the <xref target="DNSKEY-IANA"/> registry not mentioned in this document MAY be
+      implemented. For clarification and consistency, an algorithm will
+      be set to MAY only when it has been downgraded.</t>
+
+      <t> Although this document updates the algorithms to keep
+      the DNSSEC authentication secure over time, it also aims at
+      providing recommendations so that DNSSEC implementations remain
+      interoperable. DNSSEC interoperability is addressed by an
+      incremental introduction or deprecation of algorithms.</t>
+
+      <t> It is expected that deprecation of an algorithm is performed
+      gradually. This provides time for various implementations to update
+      their implemented algorithms while remaining interoperable. Unless
+      there are strong security reasons, an algorithm is expected to
+      be downgraded from MUST to MUST- or SHOULD, instead of MUST
+      NOT. Similarly, an algorithm that has not been mentioned as
+      mandatory-to-implement is expected to be introduced with a SHOULD
+      instead of a MUST.</t>
+
+      <t> Since the effects of using an unknown DNSKEY algorithm
+      is for the zone to be treated as insecure, it is recommended
+      that algorithms downgraded to SHOULD- or below are no longer used by
+      authoritative nameservers and DNSSEC signers to create new DNSKEY's. This
+      will allow for algorithms to slowly become more unused over
+      time. Once deployment has reached a sufficiently low point these
+      algorithms can finally be marked as MUST NOT so that recursive namesvers
+      can remove support for these algorithms.</t>
+
+      <t> Recursive nameservers are encouraged to keep support for all
+      algorithms not marked as MUST NOT. </t>
+
+     </section>
+
+     <section title="Document Audience">
+      <t>The recommendations of this document mostly target DNSSEC
+      implementers as implementations need to meet both high security
+      expectations as well as high interoperability between various
+      vendors and with different versions. Interoperability requires a
+      smooth move to more secure algorithms.  This may differ from
+      a user point of view that may deploy and configure DNSSEC with
+      only the safest algorithm. On the other hand, comments and
+      recommendations from this document are also expected to be useful
+      for such users.</t>
+
+     </section>
+
+    </section>
+    <section anchor="mustshouldmay" title="Conventions Used in This Document">
+      <t> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",
+        "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
+      <t> We define some additional terms here:</t>
+      <texttable anchor="tbl" style="none" suppress-title="true">
+        <ttcol align="left" width="12%"/>
+        <ttcol align="left" />
+        <c>SHOULD+</c><c>This term means the same as SHOULD. However,
+        it is likely that an algorithm marked as SHOULD+ will be promoted
+        at some future time to be a MUST.</c>
+        <c>SHOULD-</c><c>This term means the same as SHOULD. However,
+        an algorithm marked as SHOULD- may be deprecated to a MAY in a
+        future version of this document.</c>
+        <c>MUST-</c><c>This term means the same as MUST. However, we
+        expect at some point that this algorithm will no longer be a MUST
+        in a future document. Although its status will be determined
+        at a later time, it is reasonable to expect that if a future
+        revision of a document alters the status of a MUST- algorithm,
+        it will remain at least a SHOULD or a SHOULD-.</c>
+      </texttable>
+    </section>
+    <section anchor="algs" title="Algorithm Selection">
+
+      <section anchor="algs_dnskey" title="DNSKEY Algorithms">
+      <t> Recommendations for DNSKEY algorithm </t>
+        <texttable anchor="tbl_enc" suppress-title="true">
+          <ttcol align="left">Number</ttcol>
+          <ttcol align="left">Name</ttcol>
+          <ttcol align="left">Status</ttcol>
+
+          <c>1</c><c>RSAMD5</c><c>MUST NOT</c>
+          <c>XX</c><c>RSASHA1</c><c>MUST-</c>
+          <c>XX</c><c>DSA</c><c>MUST NOT</c>
+          <c>XX</c><c>NSEC3RSASHA1</c><c>MUST-</c>
+          <c>XX</c><c>NSEC3DSA</c><c>MUST NOT</c>
+          <c>XX</c><c>RSASHA256</c><c>MUST</c>
+          <c>XX</c><c>RSASHA512</c><c>SHOULD</c>
+          <c>XX</c><c>ECCGOST</c><c>SHOULD</c>
+          <c>12</c><c>ECDSAP256SHA256</c><c>SHOULD+</c>
+          <c>13</c><c>ECDSAP384SHA384</c><c>SHOULD+</c>
+        </texttable>
+
+        <t> RSAMD5 is not widely deployed and there is an industry-wide trend to
+         deprecate MD5 usage.</t>
+        <t> RSASHA1 is widely deployed, although zones deploying it are recommended
+         to switch to RSASHA256 as there is an industry-wide trend to
+         deprecate SHA1 usage and RSASHA1 does not support NSEC3</t>
+        <t> DSA is not widely deployed and vulnerable to private key compromise
+          when generating signatures using a weak or compromised random number generator.</t>
+        <t> NSEC3RSASHA1 is widely deployed. It has been marked as MUST- because RSASHA256
+         is stronger and can be used with or without NSEC3.</t>
+        <t> RSASHA512 is at the SHOULD level because it has not seen wide deployment.</t>
+        <t> ECCGOST is at the SHOULD level because it has not seen wide deployment.</t>
+        <t> ECDSAP256SHA256 and ECDSAP384SHA384 provide more strength for signature size than RSASHA variants. It is expected to be raised to MUST once it has been deployed more widely.</t>
+      </section>
+
+
+      </section>
+    <section anchor="security" title="Security Considerations">
+      <t> The security of cryptographic-based systems depends on both the
+      strength of the cryptographic algorithms chosen and the strength
+      of the keys used with those algorithms. The security also depends
+      on the engineering of the protocol used by the system to ensure
+      that there are no non-cryptographic ways to bypass the security
+      of the overall system.</t>
+
+      <t> This document concerns itself with the selection of cryptographic
+       algorithms for the use of DNSSEC, specifically with the selection
+       of "mandatory-to-implement" algorithms. The algorithms identified in
+       this document as "MUST implement" or "SHOULD implement" are not known
+       to be broken at the current time, and cryptographic research so far
+       leads us to believe that they will likely remain secure into the foreseeable
+       future. However, this isn't necessarily forever and it is expected
+       that new revisions of this document will be issued from time to
+       time to reflect the current best practice in this area.</t>
+
+      <t> Retiring an algorithm too soon would result in a signed zone with
+       such an algorithm to be downgraded to the equivalent of an unsigned zone.
+       Therefore, algorithm deprecation must be done very slowly and only after
+       careful consideration and measurements of its use.</t>
+
+      <t> DNSKEY algorithm rollover in a live zone is a complex process. See
+        RFC RFC RFC for guidelines on how to perform algorithm rollovers.</t>
+    </section>
+    <section anchor="iana" title="IANA Considerations">
+            <t>This document makes no requests of IANA.</t>
+    </section>
+    <section anchor="ack" title="Acknowledgements">
+      <t> This document borrows text from  RFC 4307 by Jeffrey I. Schiller
+      of the Massachusetts Institute of Technology (MIT) and the 4307bis
+      document by Yoav Nir, Tero Kivinen, Paul Wouters and Daniel
+      Migault. Much of the original text has been copied verbatim.</t>
+      <t> We wish to thank Olafur Gudmundsson and Paul Hoffman for their imminent feedback.</t>
+    </section>
+  </middle>
+  <!-- ====================================================================== -->
+  <back>
+    <references title="Normative References">
+      &rfc2119;
+      &rfc5282;
+    </references>
+    <references title="Informative References">
+      &rfc7427;
+      &rfc6989;
+      <reference anchor="DNSKEY-IANA" target="http://www.iana.org/assignments/dnskey-parameters">
+        <front>
+          <title>DNSKEY Algorithms</title>
+          <author initials="" surname="" fullname="">
+            <organization />
+          </author>
+          <date />
+        </front>
+      </reference>
+    </references>
+    <!-- ====================================================================== -->
+  </back>
+</rfc>
