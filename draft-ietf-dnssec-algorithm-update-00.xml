@@ -8,7 +8,9 @@
 <!ENTITY RFC5702 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5702.xml">
 <!ENTITY RFC5933 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5933.xml">
 <!ENTITY RFC6605 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6605.xml">
+<!ENTITY RFC6781 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY RFC7344 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7344.xml">
+<!ENTITY RFC7583 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7583.xml">
 <!ENTITY ED25519 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-curdle-dnskey-ed25519.xml">
 <!ENTITY ED448 PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-curdle-dnskey-ed448.xml">
 <!ENTITY MAINTAINDS PUBLIC "" "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dnsop-maintain-ds.xml">
@@ -372,8 +374,8 @@
     <section anchor="operation" title="Operational Considerations">
       <t>
 	DNSKEY algorithm rollover in a live zone is a complex
-	process.  See RFC RFC RFC for guidelines on how to perform
-	algorithm rollovers.
+	process.  See <xref target="RFC6781"/> and <xref target="RFC7583"/>
+	for guidelines on how to perform algorithm rollovers.
       </t>
     </section>
 
@@ -406,7 +408,9 @@
       &RFC5702;
       &RFC5933;
       &RFC6605;
+      &RFC6781;
       &RFC7344;
+      &RFC7583;
       &ED25519;
       &ED448;
       &MAINTAINDS;
